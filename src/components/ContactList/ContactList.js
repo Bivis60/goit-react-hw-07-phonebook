@@ -1,33 +1,49 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { removeContact } from 'Redux/ContactsSlice';
-import { getContacts, getFilter } from 'Redux/Selectors';
+import {
+  getContacts,
+  getError,
+  getFilter,
+  getIsLoading,
+} from 'redux/Selectors';
 import { Span, Li, Button } from './ContactList.styled';
+import { useEffect } from 'react';
+import { deleteContact, fetchContacts } from 'redux/Operations';
 
 export const ContactList = () => {
   const dispatch = useDispatch();
-  const contactList = useSelector(getContacts);
+  const items = useSelector(getContacts);
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+
   const contactFilter = useSelector(getFilter);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const getVisibleList = () => {
     const normalizedFilter = contactFilter.toLowerCase();
-    return contactList.filter(contact =>
+    return items.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
   return (
-    <ul>
-      {getVisibleList().map(({ id, name, number }) => {
-        return (
-          <Li key={id}>
-            <Span>{name}: </Span>
-            <Span>{number}</Span>
-            <Button type="button" onClick={() => dispatch(removeContact(id))}>
-              Delete
-            </Button>
-          </Li>
-        );
-      })}
-    </ul>
+    <>
+      {isLoading && <p>Loading contacts...</p>}
+      {error && <p>{error}</p>}
+      <ul>
+        {getVisibleList().map(({ id, name, phone }) => {
+          return (
+            <Li key={id}>
+              <Span>{name}: </Span>
+              <Span>{phone}</Span>
+              <Button type="button" onClick={() => dispatch(deleteContact(id))}>
+                Delete
+              </Button>
+            </Li>
+          );
+        })}
+      </ul>
+    </>
   );
 };

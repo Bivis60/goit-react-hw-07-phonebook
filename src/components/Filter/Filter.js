@@ -1,12 +1,12 @@
-import { getFilter } from 'Redux/Selectors';
 import { useDispatch, useSelector } from 'react-redux';
+import { getFilter } from 'redux/Selectors';
+import { setFilter } from 'redux/FilterSlice';
 import { Label } from 'components/ContactForm/ContactForm.styled';
-import { setFilter } from 'Redux/FilterSlice';
 
 export const Filter = () => {
   const dispatch = useDispatch();
   const filetrData = useSelector(getFilter);
-  
+
   return (
     <Label>
       Find contact by name
