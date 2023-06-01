@@ -8,6 +8,7 @@ export const Form = styled.form`
 export const Label = styled.label`
   display: flex;
   flex-direction: column;
+  min-width: 300px;
   margin-bottom: 8px;
   font-weight: 500;
   font-size: 14px;

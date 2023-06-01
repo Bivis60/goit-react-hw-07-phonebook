@@ -1,6 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact } from './Operations';
 
+const hendlePending = state => {
+  state.isLoading = true;
+};
+
+const hendleRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
+
+const hendleFetchContactsFulfilled = (state, action) => {
+  state.isLoading = false;
+  state.error = null;
+  state.items = action.payload;
+};
+
+const hendleAddContactFulfilled = (state, action) => {
+  state.isLoading = false;
+  state.error = null;
+  state.items.unshift(action.payload);
+};
+
+const hendleDeleteContactFulfilled = (state, action) => {
+  state.isLoading = false;
+  state.error = null;
+  state.items = state.items.filter(item => item.id !== action.payload.id);
+};
+
 export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
@@ -8,47 +35,28 @@ export const contactsSlice = createSlice({
     isLoading: false,
     error: null,
   },
-  extraReducers: {
-    [fetchContacts.pending](state) {
-      state.isLoading = true;
-    },
-    [fetchContacts.fulfilled](state, action) {
-      state.isLoading = false;
-      state.error = null;
-      state.items = action.payload;
-    },
-    [fetchContacts.rejected](state, action) {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
+  extraReducers: builder =>
+    builder
+      .addCase(fetchContacts.pending, hendlePending)
+      .addCase(fetchContacts.fulfilled, hendleFetchContactsFulfilled)
+      .addCase(fetchContacts.rejected, hendleRejected)
+      .addCase(addContact.pending, hendlePending)
+      .addCase(addContact.fulfilled, hendleAddContactFulfilled)
+      .addCase(addContact.rejected, hendleRejected)
+      .addCase(deleteContact.pending, hendlePending)
+      .addCase(deleteContact.fulfilled, hendleDeleteContactFulfilled)
+      .addCase(deleteContact.rejected, hendleRejected),
+  // {
+  //   [fetchContacts.pending]: hendlePending,
+  //   [fetchContacts.fulfilled]: hendleFetchContactsFulfilled,
+  //   [fetchContacts.rejected]: hendleRejected,
 
-    [addContact.pending](state) {
-      state.isLoading = true;
-    },
-    [addContact.fulfilled](state, action) {
-      state.isLoading = false;
-      state.error = null;
-      state.items.unshift(action.payload);
-    },
-    [addContact.rejected](state, action) {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
+  //   [addContact.pending]: hendlePending,
+  //   [addContact.fulfilled]: hendleAddContactFulfilled,
+  //   [addContact.rejected]: hendleRejected,
 
-    [deleteContact.pending](state) {
-      state.isLoading = true;
-    },
-    [deleteContact.fulfilled](state, action) {
-      state.isLoading = false;
-      state.error = null;
-      const index = state.items.findIndex(
-        contact => contact.id === action.payload
-      );
-      state.items.splice(index, 1);
-    },
-    [deleteContact.rejected](state, action) {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-  },
+  //   [deleteContact.pending]: hendlePending,
+  //   [deleteContact.fulfilled]: hendleDeleteContactFulfilled,
+  //   [deleteContact.rejected]: hendleRejected,
+  // },
 });
