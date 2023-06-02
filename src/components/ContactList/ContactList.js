@@ -4,10 +4,10 @@ import {
   getError,
   getFilter,
   getIsLoading,
-} from 'Redux/Selectors';
+} from 'redux/selectors';
 import { Span, Li, Button } from './ContactList.styled';
 import { useEffect } from 'react';
-import { deleteContact, fetchContacts } from 'Redux/Operations';
+import { deleteContact, fetchContacts } from 'redux/operations';
 
 export const ContactList = () => {
   const dispatch = useDispatch();

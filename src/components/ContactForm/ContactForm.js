@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'Redux/Selectors';
+import { getContacts } from 'redux/selectors';
 import { Form, Label, Button } from './ContactForm.styled';
-import { addContact } from 'Redux/Operations';
+import { addContact } from 'redux/operations';
 
 export const ContactForm = () => {
   const [contact, setContact] = useState({
